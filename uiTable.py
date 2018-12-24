@@ -1,4 +1,5 @@
 from tkinter import *
+from classes import *
 
 root = Tk()
 leftFrame = Frame(root, bg="green")
@@ -78,7 +79,7 @@ entry_size = Entry(blocksControllerFrame)
 entry_size.grid(row=2, column=1)
 
 #radio buttons
-kindes = [("Empty", 0),("Block", 1),("Prisioner", 2)]
+kindes = [("Block", 1),("Prisioner", 2)]
 
 v = IntVar()
 v.set(0) # initialize
