@@ -93,6 +93,7 @@ def getSolution(t):
 		actual_tab = getParentTab(tree[x], actual_tab)
 		solution_tree.append(actual_tab)
 		actual_tab.printTabHuman()
+	solution_tree.reverse()
 	return solution_tree
 
 

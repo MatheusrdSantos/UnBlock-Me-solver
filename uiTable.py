@@ -41,11 +41,16 @@ tableNavigatorFrame = Frame(leftFrame)
 #navigatorLabel = Label(tableNavigatorFrame, text="nevigator", bg="gray")
 #navigatorLabel.pack(fill=X)
 button_previous = Button(tableNavigatorFrame, text="Previous", fg="red")
-button_previous.pack(side=LEFT)
-
+button_previous.grid()
+navigatorLabel = Label(tableNavigatorFrame, text="0/0", bg="gray")
+navigatorLabel.grid(row=0, column=1)
 button_next = Button(tableNavigatorFrame, text="Next", fg="green")
-button_next.pack(side=RIGHT)
+button_next.grid(row=0, column=2)
 
+tableNavigatorFrame.columnconfigure(0, weight=1)
+tableNavigatorFrame.columnconfigure(1, weight=1)
+tableNavigatorFrame.columnconfigure(2, weight=1)
+tableNavigatorFrame.rowconfigure(0, weight=1)
 
 tableNavigatorFrame.pack(expand=True, fill=X)
 
@@ -168,6 +173,7 @@ def displayTableFromIndex():
     for block in solution_tree[actual_table_index.get()].pieces:
         if(block.kind):
             updateTableForSolution(block)
+            navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
 
 def displayNextTable():
     actual_table_index.set(actual_table_index.get()+1)
@@ -248,7 +254,8 @@ def solve():
     solution = getSolution(tab)
     for tree_tab in solution:
         solution_tree.append(tree_tab)
-    displayTableFromIndex()
+    navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
+    #displayTableFromIndex()
 
 
 button_addBlock.configure(command=addBlock)
