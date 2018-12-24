@@ -121,6 +121,7 @@ blockListFrame = Frame(rightFrame)
 # list all blocks here
 #blockListLabel = Label(blockListFrame, text="list blocks!", bg="purple")
 #blockListLabel.pack(fill=X)
+'''
 blockName = Label(blockListFrame, text="Block_1")
 blockName.grid(row=0, sticky=(N, S, E, W))
 block_x = Label(blockListFrame, text="0")
@@ -131,10 +132,10 @@ block_size = Label(blockListFrame, text="3")
 block_size.grid(row=0, column = 3, sticky=(N, S, E, W))
 block_kind = Label(blockListFrame, text="block")
 block_kind.grid(row=0, column = 4,sticky=(N, S, E, W))
+'''
 
-
-button_remove = Button(blockListFrame, text="del", bg="red")
-button_remove.grid(row=0, column = 5, sticky=(N, S, E, W))
+#button_remove = Button(blockListFrame, text="del", bg="red")
+#button_remove.grid(row=0, column = 5, sticky=(N, S, E, W))
 scrollbar = Scrollbar(blockListFrame)
 scrollbar.grid(row=0, column=6)
 
@@ -183,7 +184,11 @@ def displayPreviousTable():
     actual_table_index.set(actual_table_index.get()-1)
     displayTableFromIndex()
 
-def removeBlock(x, y, elements):
+def removeBlock(params):
+    print (params[0], params[1])
+    x = params[0]
+    y = params[1]
+    elements = params[2]
     current_block = None
     for block in blocks:
         if block.x == x and block.y == y:
@@ -191,16 +196,15 @@ def removeBlock(x, y, elements):
             blocks.remove(block)
             break
     block_index = (6*y)+x
-    table_positions[block_index].configure(text=" ", bg="gray", borderwidth=1, relief="solid")
+    table_positions[block_index].configure(text='('+str(block_index-int(block_index/6)*6)+', '+str(int(block_index/6))+')', bg="gray", borderwidth=1, relief="solid")
     if(current_block.isHorizontal):
         for x in range(block_index+1, block_index+current_block.length):
-            table_positions[x].configure(text=" ", bg="gray", borderwidth=1, relief="solid")
+            table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
     else:
         for x in range(block_index, block_index+current_block.length*6, 6):
-            table_positions[x].configure(text=" ", bg="gray", borderwidth=1, relief="solid")
+            table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
     for element in elements:
         element.destroy()
-
 def updateTable():
     last_block = blocks[-1]
     block_index = (6*last_block.y)+last_block.x
@@ -231,7 +235,7 @@ def updateBlockList():
 
     button_remove = Button(blockListFrame, text="del", bg="red")
     elements = [new_blockName, new_block_x, new_block_y, new_block_size, new_block_kind, button_remove]
-    button_remove.configure(command=lambda: removeBlock(blocks[-1].x, blocks[-1].y, elements))
+    button_remove.configure(command=lambda params = [blocks[-1].x, blocks[-1].y, elements]: removeBlock(params))
     button_remove.grid(row=len(blocks), column = 5, sticky=(N, S, E, W))
     updateTable()
 
