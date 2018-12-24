@@ -23,6 +23,8 @@ tableFrame = Frame(leftFrame, bg="yellow")
 #tableLabel = Label(tableFrame, text="table", bg="red")
 #tableLabel.pack(fill=X)
 table_positions = []
+actual_table_index = IntVar()
+solution_tree = []
 for y in range(0, 6):
     for x in range(0, 6):
         #table_positions.append(Label(tableFrame, text='('+str(x)+', '+str(y)+')', bg="blue"))
@@ -143,6 +145,38 @@ blockListFrame.rowconfigure(0, weight=1)
 
 
 blockListFrame.pack(expand=True, fill=X)
+def resetTable():
+    for y in range(0, 6):
+        for x in range(0, 6):
+            table_positions[(6*y)+x].configure(text='('+str(x)+', '+str(y)+')', bg="gray", borderwidth=1, relief="solid")
+def updateTableForSolution(block):
+    block_index = (6*block.y)+block.x
+    if block.kind==1:
+        color = "orange"
+    else:
+        color = "red"
+    table_positions[block_index].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
+    if(block.isHorizontal):
+        for x in range(block_index+1, block_index+block.length):
+            table_positions[x].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
+    else:
+        for x in range(block_index, block_index+block.length*6, 6):
+            table_positions[x].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
+
+def displayTableFromIndex():
+    resetTable()
+    for block in solution_tree[actual_table_index.get()].pieces:
+        if(block.kind):
+            updateTableForSolution(block)
+
+def displayNextTable():
+    actual_table_index.set(actual_table_index.get()+1)
+    displayTableFromIndex()
+
+def displayPreviousTable():
+    actual_table_index.set(actual_table_index.get()-1)
+    displayTableFromIndex()
+
 def removeBlock(x, y, elements):
     current_block = None
     for block in blocks:
@@ -204,7 +238,23 @@ def addBlock():
     blocks.append(Peca(len(blocks), block_x_value, block_y_value, block_isHorizontal_value, block_kind_value, block_size_value))
     print(len(blocks))
     updateBlockList()
+
+def solve():
+    full_blocks = []
+    full_blocks+=blocks
+    tab = fullfillTable(full_blocks)
+    full_blocks = tab.pieces
+    tab.printTabHuman()
+    solution = getSolution(tab)
+    for tree_tab in solution:
+        solution_tree.append(tree_tab)
+    displayTableFromIndex()
+
+
 button_addBlock.configure(command=addBlock)
+button_solve.configure(command=solve)
+button_next.configure(command=displayNextTable)
+button_previous.configure(command=displayPreviousTable)
 
 root.geometry("1440x810")
 

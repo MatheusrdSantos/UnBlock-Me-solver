@@ -1,2 +1,4 @@
-for x in range(22, 0, -1):
-	print(x)
+if(not None):
+	print('entrou')
+if(not [1,2]):
+	print('entrou tb')
