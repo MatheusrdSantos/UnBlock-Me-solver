@@ -48,3 +48,7 @@ def getParentTab(tabs, child):
 	for tab in tabs:
 		if(isParent(tab , child)):
 			return tab
+
+# UI implementation
+
+    
