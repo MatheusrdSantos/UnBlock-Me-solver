@@ -1,4 +1,4 @@
-if(not None):
-	print('entrou')
-if(not [1,2]):
-	print('entrou tb')
+import time
+for x in range(0,5):
+	time.sleep(2)
+	print(x)

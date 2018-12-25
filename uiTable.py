@@ -1,6 +1,8 @@
 from tkinter import *
 from classes import *
 from utils import *
+import time
+import sys
 
 root = Tk()
 leftFrame = Frame(root, bg="green")
@@ -175,10 +177,15 @@ def displayTableFromIndex():
         if(block.kind):
             updateTableForSolution(block)
             navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
-
 def displayNextTable():
     actual_table_index.set(actual_table_index.get()+1)
     displayTableFromIndex()
+
+def displayNextTableDelay():
+    actual_table_index.set(actual_table_index.get()+1)
+    displayTableFromIndex()
+    if(actual_table_index.get()<len(solution_tree)-1):
+        root.after(2000, displayNextTableDelay)
 
 def displayPreviousTable():
     actual_table_index.set(actual_table_index.get()-1)
@@ -259,6 +266,7 @@ def solve():
     for tree_tab in solution:
         solution_tree.append(tree_tab)
     navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
+    displayNextTableDelay()
     #displayTableFromIndex()
 
 
@@ -268,5 +276,4 @@ button_next.configure(command=displayNextTable)
 button_previous.configure(command=displayPreviousTable)
 
 root.geometry("1440x810")
-
 root.mainloop()
