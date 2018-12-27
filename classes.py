@@ -1,3 +1,4 @@
+from utils import *
 class Move:
 	def __init__(self, last_pos = {}, new_pos = {}, piece_id = -1):
 		self.last_pos = last_pos

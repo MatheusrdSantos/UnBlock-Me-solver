@@ -1,6 +1,7 @@
-from classes import *
 def tabs_are_equal(tab1, tab2):
 	for x in range(0, len(tab1.pieces)):
+		if(tab1.pieces[x].kind == 0 and tab2.pieces[x].kind == 0):
+			continue
 		if tab1.pieces[x].x != tab2.pieces[x].x or tab1.pieces[x].y != tab2.pieces[x].y:
 			return False
 	return True
@@ -18,8 +19,10 @@ def removeEqualTabs(tab, tabs, count):
 	return tabs
 		
 def removeRepeatedTabs(tabs):
+	print("n_tabs: "+str(len(tabs)))
 	for count, tab in enumerate(tabs, start=0):
 		tabs = removeEqualTabs(tab, tabs, count)
+	print("left_tabls: "+str(len(tabs)))
 	return tabs
 
 def tabIsInArray(tabs, tab):
@@ -50,51 +53,7 @@ def getParentTab(tabs, child):
 		if(isParent(tab , child)):
 			return tab
 
-# UI implementation
-def fullfillTable(blocks):
-	tab = Table(blocks)
-	for y in range(0, 6):
-		for x in range(0, 6):
-			if(not tab.get_quad(x, y)):
-				tab.pieces.append(Peca(len(blocks)+1, x, y, 1, 0, 1))
-	return tab
-def getSolution(t):
-	tree = [[t]]
-	solved = False
-	cont = 0
-	while not solved:
-		cont+=1
-		print(cont)
-		actual_depth = tree[-1]
-		childs = []
-		print(len(actual_depth))
-		for tab in actual_depth:
-			new_childs = tab.getAllChilds()
-			solved_tab_result = hasSolvedTab(new_childs)
-			if(solved_tab_result):
-				solved_tab = solved_tab_result[0]
-				solved_tab.printTabHuman()
-				solved = True
-				solved_tab_index = solved_tab_result[1]
-				break
-			childs+=new_childs
-		#tree.clear()
-		if(not solved):
-			childs = removeRepeatedTabs(childs)
-			tree.append(childs)
 
-	print("RESOLVIDO")
-	print(len(tree))
-	solution_tree = []
-	solution_tree.append(solved_tab)
-	actual_tab = solved_tab
-	for x in range(len(tree)-1, -1, -1):
-		print(x)
-		actual_tab = getParentTab(tree[x], actual_tab)
-		solution_tree.append(actual_tab)
-		actual_tab.printTabHuman()
-	solution_tree.reverse()
-	return solution_tree
 
 
 	

@@ -1,6 +1,5 @@
 from tkinter import *
-from classes import *
-from utils import *
+from solver import *
 import time
 import sys
 
@@ -153,6 +152,16 @@ blockListFrame.rowconfigure(0, weight=1)
 
 
 blockListFrame.pack(expand=True, fill=X)
+
+# UI implementation
+def fullfillTable(blocks):
+	tab = Table(blocks)
+	for y in range(0, 6):
+		for x in range(0, 6):
+			if(not tab.get_quad(x, y)):
+				tab.pieces.append(Peca(len(blocks)+1, x, y, 1, 0, 1))
+	return tab
+
 def resetTable():
     for y in range(0, 6):
         for x in range(0, 6):
