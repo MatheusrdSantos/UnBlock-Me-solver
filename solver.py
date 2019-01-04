@@ -21,7 +21,9 @@ def getSolution(t):
 			childs+=new_childs
 		#tree.clear()
 		if(not solved):
+			print("antes: "+str(len(childs)))
 			childs = removeRepeatedTabs(childs)
+			print("depois: "+str(len(childs)))
 			tree.append(childs)
 
 	print("RESOLVIDO")
