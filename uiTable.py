@@ -1,8 +1,11 @@
 from tkinter import *
-from solver import *
+from solver import * 
+from PIL import ImageTk
+from table_builder import *
 import time
 import sys
-
+import os
+elementsBlocks = []
 root = Tk()
 leftFrame = Frame(root, bg="green")
 leftFrame.pack(side=LEFT, fill=BOTH, expand=True)
@@ -66,6 +69,12 @@ button_solve.pack(fill=X)
 
 tableSolverFrame.pack(expand=True, fill=X)
 
+imagesFrame = Frame(rightFrame)   
+
+images_label = Label(imagesFrame, text="List of table images: ")
+images_label.pack()
+
+imagesFrame.pack()
 
 blocksControllerFrame = Frame(rightFrame)
 
@@ -99,12 +108,12 @@ Radiobutton(blocksControllerFrame, text="yes", variable=h, value=1).grid(row = 2
 Radiobutton(blocksControllerFrame, text="no", variable=h, value=0).grid(row = 2, column=4)
 
 #radio buttons
-kindes = [("Block", 1),("Prisioner", 2)]
+kinds = [("Block", 1),("Prisioner", 2)]
 
 v = IntVar()
 v.set(0) # initialize
 cont = 0
-for text, mode in kindes:
+for text, mode in kinds:
     b = Radiobutton(blocksControllerFrame, text=text,
                     variable=v, value=mode)
     b.grid(row = cont+3)
@@ -137,8 +146,6 @@ block_kind.grid(row=0, column = 4,sticky=(N, S, E, W))
 
 #button_remove = Button(blockListFrame, text="del", bg="red")
 #button_remove.grid(row=0, column = 5, sticky=(N, S, E, W))
-scrollbar = Scrollbar(blockListFrame)
-scrollbar.grid(row=0, column=6)
 
 
 blockListFrame.columnconfigure(0, weight=1)
@@ -221,6 +228,12 @@ def removeBlock(params):
             table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
     for element in elements:
         element.destroy()
+def removeAllBlocks():
+    for block in blocks:
+        current_block = block
+        blocks.remove(block)
+    #for element in elements:
+        #element.destroy()
 def updateTable():
     last_block = blocks[-1]
     block_index = (6*last_block.y)+last_block.x
@@ -248,11 +261,11 @@ def updateBlockList():
     new_block_kind = Label(blockListFrame, text=str(blocks[-1].kind))
     new_block_kind.grid(row=len(blocks), column = 4,sticky=(N, S, E, W))
     elements = [new_blockName, new_block_x, new_block_y, new_block_size, new_block_kind]
-
     button_remove = Button(blockListFrame, text="del", bg="red")
     elements = [new_blockName, new_block_x, new_block_y, new_block_size, new_block_kind, button_remove]
     button_remove.configure(command=lambda params = [blocks[-1].x, blocks[-1].y, elements]: removeBlock(params))
     button_remove.grid(row=len(blocks), column = 5, sticky=(N, S, E, W))
+    elementsBlocks.append(elements) 
     updateTable()
 
 def addBlock():
@@ -262,6 +275,11 @@ def addBlock():
     block_isHorizontal_value = h.get()
     block_kind_value = v.get()
     blocks.append(Peca(len(blocks), block_x_value, block_y_value, block_isHorizontal_value, block_kind_value, block_size_value))
+    print(len(blocks))
+    updateBlockList()
+
+def addBlockFromImage(block):
+    blocks.append(block)
     print(len(blocks))
     updateBlockList()
 
@@ -278,11 +296,38 @@ def solve():
     displayNextTableDelay()
     #displayTableFromIndex()
 
+def showTable(image):
+    resetTable()
+    blocks.clear()
+    actual_table_index.set(0)
+    solution_tree.clear()
+    for line in elementsBlocks:
+        for element in line:
+            element.destroy()
+    removeAllBlocks()
+    pre_table = openImage(image)
+    table = blocksInfoToTable(pre_table)
+    for block in table.pieces:
+        if(block.kind==0):
+            continue
+        addBlockFromImage(block)
+    table.printTabHuman()
+
+source = "tables/"
+images = os.listdir(source)
+imagesButton = []
+
+for image in images:
+    listTabButton = Button(imagesFrame, text=image)
+    listTabButton.configure(command=lambda params = source+image: showTable(params))
+    listTabButton.pack()
+    imagesButton.append(listTabButton) 
 
 button_addBlock.configure(command=addBlock)
 button_solve.configure(command=solve)
 button_next.configure(command=displayNextTable)
 button_previous.configure(command=displayPreviousTable)
+
 
 root.geometry("1440x810")
 root.mainloop()

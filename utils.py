@@ -1,8 +1,8 @@
 from PIL import Image
-def openImage():
-	im = Image.open('tables/tab3.jpeg')
+def openImage(path):
+	im = Image.open(path)
 	pix_val = list(im.getdata())
-	print(im.size)
+	#print(im.size)
 	width, height = im.size
 	pre_table = []
 	for y in range(347, 857+1):
@@ -37,23 +37,21 @@ def openImage():
 								break
 						if(has_bottom and has_top):
 							pre_table.append({'kind':1, 'has_top':True, 'has_bottom':True, 'isHorizontal': True, 'x': int(t_x/85)-1, 'y': int(t_y/85)-1, 'visited': False, 'isFinal':is_final})
-							print("horizontal block")
+							#print("horizontal block")
 						elif((has_top and not has_bottom) or (has_bottom and not has_top) or (not has_top and not has_bottom)):
 							#print(has_top, " ",has_bottom)
 							pre_table.append({'kind':1, 'has_top':has_top, 'has_bottom':has_bottom, 'isHorizontal': False, 'x': int(t_x/85)-1, 'y': int(t_y/85)-1, 'visited': False, 'isFinal':is_final})
-							print("vertical block")
-						else:
-							print("deu merda")
+							#print("vertical block")
 					else:
 						pre_table.append({'kind':2, 'has_top':True, 'has_bottom':True, 'isHorizontal': True, 'x': int(t_x/85)-1, 'y': int(t_y/85)-1, 'visited': False, 'isFinal':is_final})
-						print("prisioner")
+						#print("prisioner")
 				else:
 					pre_table.append({'kind':0, 'has_top':False, 'has_bottom':False, 'isHorizontal': True, 'x': int(t_x/85)-1, 'y': int(t_y/85)-1, 'visited': False, 'isFinal':is_final})
-					print("empty")
+					#print("empty")
 				im.putpixel((int(x-(85/2)), int(y-(85/2))), (255,0,0))
 	im.putpixel((10, 10), (255,0,0))
 	im.save('tables/modified.jpeg')
-	im.show()
+	#im.show()
 	return pre_table
 def tabs_are_equal(tab1, tab2):
 	for x in range(0, len(tab1.pieces)):
@@ -74,7 +72,6 @@ def removeEqualTabs(tab, tabs, count):
 		if(tabs_are_equal(current_tab, tab)):
 			tabs.pop(index)
 	return tabs
-		
 def removeRepeatedTabs(tabs):
 	print("n_tabs: "+str(len(tabs)))
 	for count, tab in enumerate(tabs, start=0):
