@@ -294,6 +294,6 @@ button_solve.configure(command=solve)
 button_next.configure(command=displayNextTable)
 button_previous.configure(command=displayPreviousTable)
 
-
-root.geometry("1440x810")
-root.mainloop()
+def run():
+    root.geometry("1440x810")
+    root.mainloop()

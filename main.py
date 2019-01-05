@@ -1,0 +1,2 @@
+from uiTable import *
+run()
