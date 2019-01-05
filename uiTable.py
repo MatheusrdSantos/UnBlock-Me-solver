@@ -5,8 +5,17 @@ from table_builder import *
 import time
 import sys
 import os
-elementsBlocks = []
+
 root = Tk()
+
+# declare global variables
+global_elementsBlocks = []
+global_table_positions = []
+global_actual_table_index = IntVar()
+global_solution_tree = []
+global_blocks = []
+
+
 leftFrame = Frame(root, bg='#ABABAB')
 leftFrame.pack(side=LEFT, fill=BOTH, expand=True)
 rightFrame = Frame(root)
@@ -16,13 +25,11 @@ rightFrame.pack(side=RIGHT, expand=True, fill=BOTH)
 tableFrame = Frame(leftFrame)
 
 # build your table here
-table_positions = []
-actual_table_index = IntVar()
-solution_tree = []
+
 for y in range(0, 6):
     for x in range(0, 6):
-        table_positions.append(Label(tableFrame, text='('+str(x)+', '+str(y)+')', bg="gray", borderwidth=1, relief="solid"))
-        table_positions[-1].grid(row=y, column=x, sticky=(N, S, E, W))
+        global_table_positions.append(Label(tableFrame, text='('+str(x)+', '+str(y)+')', bg="gray", borderwidth=1, relief="solid"))
+        global_table_positions[-1].grid(row=y, column=x, sticky=(N, S, E, W))
     tableFrame.columnconfigure(y, weight=1)
 tableFrame.rowconfigure(1, weight=1)
 tableFrame.pack(expand=True, fill=X)
@@ -98,7 +105,7 @@ for text, mode in kinds:
                     variable=v, value=mode)
     b.grid(row = cont+3)
     cont+=1
-blocks = []
+
 button_addBlock = Button(blocksControllerFrame, text="add Block")
 button_addBlock.grid(columnspan=4)
 
@@ -133,39 +140,39 @@ def fullfillTable(blocks):
 def resetTable():
     for y in range(0, 6):
         for x in range(0, 6):
-            table_positions[(6*y)+x].configure(text='('+str(x)+', '+str(y)+')', bg="#674519", borderwidth=1, relief="solid")
+            global_table_positions[(6*y)+x].configure(text='('+str(x)+', '+str(y)+')', bg="#674519", borderwidth=1, relief="solid")
 def updateTableForSolution(block):
     block_index = (6*block.y)+block.x
     if block.kind==1:
         color = "orange"
     else:
         color = "red"
-    table_positions[block_index].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
+    global_table_positions[block_index].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
     if(block.isHorizontal):
         for x in range(block_index+1, block_index+block.length):
-            table_positions[x].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
+            global_table_positions[x].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
     else:
         for x in range(block_index, block_index+block.length*6, 6):
-            table_positions[x].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
+            global_table_positions[x].configure(text=block.id, bg=color, borderwidth=2, relief="solid")
 
 def displayTableFromIndex():
     resetTable()
-    for block in solution_tree[actual_table_index.get()].pieces:
+    for block in global_solution_tree[global_actual_table_index.get()].pieces:
         if(block.kind):
             updateTableForSolution(block)
-            navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)-1))
+            navigatorLabel.configure(bg="gray", text=str(global_actual_table_index.get())+" / "+ str(len(global_solution_tree)-1))
 def displayNextTable():
-    actual_table_index.set(actual_table_index.get()+1)
+    global_actual_table_index.set(global_actual_table_index.get()+1)
     displayTableFromIndex()
 
 def displayNextTableDelay():
-    actual_table_index.set(actual_table_index.get()+1)
+    global_actual_table_index.set(global_actual_table_index.get()+1)
     displayTableFromIndex()
-    if(actual_table_index.get()<len(solution_tree)-1):
+    if(global_actual_table_index.get()<len(global_solution_tree)-1):
         root.after(1500, displayNextTableDelay)
 
 def displayPreviousTable():
-    actual_table_index.set(actual_table_index.get()-1)
+    global_actual_table_index.set(global_actual_table_index.get()-1)
     displayTableFromIndex()
 
 def removeBlock(params):
@@ -174,58 +181,58 @@ def removeBlock(params):
     y = params[1]
     elements = params[2]
     current_block = None
-    for block in blocks:
+    for block in global_blocks:
         if block.x == x and block.y == y:
             current_block = block
-            blocks.remove(block)
+            global_blocks.remove(block)
             break
     block_index = (6*y)+x
-    table_positions[block_index].configure(text='('+str(block_index-int(block_index/6)*6)+', '+str(int(block_index/6))+')', bg="gray", borderwidth=1, relief="solid")
+    global_table_positions[block_index].configure(text='('+str(block_index-int(block_index/6)*6)+', '+str(int(block_index/6))+')', bg="gray", borderwidth=1, relief="solid")
     if(current_block.isHorizontal):
         for x in range(block_index+1, block_index+current_block.length):
-            table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
+            global_table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
     else:
         for x in range(block_index, block_index+current_block.length*6, 6):
-            table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
+            global_table_positions[x].configure(text='('+str(x-int(x/6)*6)+', '+str(int(x/6))+')', bg="gray", borderwidth=1, relief="solid")
     for element in elements:
         element.destroy()
 def removeAllBlocks():
-    for block in blocks:
+    for block in global_blocks:
         current_block = block
-        blocks.remove(block)
+        global_blocks.remove(block)
 
 def updateTable():
-    last_block = blocks[-1]
+    last_block = global_blocks[-1]
     block_index = (6*last_block.y)+last_block.x
     if last_block.kind==1:
         color = "orange"
     else:
         color = "red"
-    table_positions[block_index].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
+    global_table_positions[block_index].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
     if(last_block.isHorizontal):
         for x in range(block_index+1, block_index+last_block.length):
-            table_positions[x].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
+            global_table_positions[x].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
     else:
         for x in range(block_index, block_index+last_block.length*6, 6):
-            table_positions[x].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
+            global_table_positions[x].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
 
 def updateBlockList():
-    new_blockName = Label(blockListFrame, text="Block_"+str(blocks[-1].id))
-    new_blockName.grid(row=len(blocks), sticky=(N, S, E, W))
-    new_block_x = Label(blockListFrame, text=str(blocks[-1].x))
-    new_block_x.grid(row=len(blocks), column = 1, sticky=(N, S, E, W))
-    new_block_y = Label(blockListFrame, text=str(blocks[-1].y))
-    new_block_y.grid(row=len(blocks), column = 2, sticky=(N, S, E, W))
-    new_block_size = Label(blockListFrame, text=str(blocks[-1].length))
-    new_block_size.grid(row=len(blocks), column = 3, sticky=(N, S, E, W))
-    new_block_kind = Label(blockListFrame, text=str(blocks[-1].kind))
-    new_block_kind.grid(row=len(blocks), column = 4,sticky=(N, S, E, W))
+    new_blockName = Label(blockListFrame, text="Block_"+str(global_blocks[-1].id))
+    new_blockName.grid(row=len(global_blocks), sticky=(N, S, E, W))
+    new_block_x = Label(blockListFrame, text=str(global_blocks[-1].x))
+    new_block_x.grid(row=len(global_blocks), column = 1, sticky=(N, S, E, W))
+    new_block_y = Label(blockListFrame, text=str(global_blocks[-1].y))
+    new_block_y.grid(row=len(global_blocks), column = 2, sticky=(N, S, E, W))
+    new_block_size = Label(blockListFrame, text=str(global_blocks[-1].length))
+    new_block_size.grid(row=len(global_blocks), column = 3, sticky=(N, S, E, W))
+    new_block_kind = Label(blockListFrame, text=str(global_blocks[-1].kind))
+    new_block_kind.grid(row=len(global_blocks), column = 4,sticky=(N, S, E, W))
     elements = [new_blockName, new_block_x, new_block_y, new_block_size, new_block_kind]
     button_remove = Button(blockListFrame, text="del", bg="red")
     elements = [new_blockName, new_block_x, new_block_y, new_block_size, new_block_kind, button_remove]
-    button_remove.configure(command=lambda params = [blocks[-1].x, blocks[-1].y, elements]: removeBlock(params))
-    button_remove.grid(row=len(blocks), column = 5, sticky=(N, S, E, W))
-    elementsBlocks.append(elements) 
+    button_remove.configure(command=lambda params = [global_blocks[-1].x, global_blocks[-1].y, elements]: removeBlock(params))
+    button_remove.grid(row=len(global_blocks), column = 5, sticky=(N, S, E, W))
+    global_elementsBlocks.append(elements) 
     updateTable()
 
 def addBlock():
@@ -234,33 +241,33 @@ def addBlock():
     block_size_value = int(entry_size.get())
     block_isHorizontal_value = h.get()
     block_kind_value = v.get()
-    blocks.append(Peca(len(blocks), block_x_value, block_y_value, block_isHorizontal_value, block_kind_value, block_size_value))
-    print(len(blocks))
+    global_blocks.append(Peca(len(global_blocks), block_x_value, block_y_value, block_isHorizontal_value, block_kind_value, block_size_value))
+    print(len(global_blocks))
     updateBlockList()
 
 def addBlockFromImage(block):
-    blocks.append(block)
-    print(len(blocks))
+    global_blocks.append(block)
+    print(len(global_blocks))
     updateBlockList()
 
 def solve():
     full_blocks = []
-    full_blocks+=blocks
+    full_blocks+=global_blocks
     tab = fullfillTable(full_blocks)
     full_blocks = tab.pieces
     tab.printTabHuman()
     solution = getSolution(tab)
     for tree_tab in solution:
-        solution_tree.append(tree_tab)
-    navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
+        global_solution_tree.append(tree_tab)
+    navigatorLabel.configure(bg="gray", text=str(global_actual_table_index.get())+" / "+ str(len(global_solution_tree)))
     displayNextTableDelay()
 
 def showTable(image):
     resetTable()
-    blocks.clear()
-    actual_table_index.set(0)
-    solution_tree.clear()
-    for line in elementsBlocks:
+    global_blocks.clear()
+    global_actual_table_index.set(0)
+    global_solution_tree.clear()
+    for line in global_elementsBlocks:
         for element in line:
             element.destroy()
     removeAllBlocks()
