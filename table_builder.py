@@ -14,9 +14,9 @@ def blocksInfoToTable(pre_table):
             if(block['visited']):
                 continue
             if(block['kind']==0):
-                blocks.append(Peca(cont, block['x'], block['y'], True, 0, 1))
+                blocks.append(Block(cont, block['x'], block['y'], True, 0, 1))
             elif(block['kind']==2):
-                blocks.append(Peca(cont, block['x'], block['y'], True, 2, 2))
+                blocks.append(Block(cont, block['x'], block['y'], True, 2, 2))
                 index = findBlock(pre_table, x+1, y)
                 pre_table[index]['visited'] = True
             elif(block['isHorizontal']):
@@ -28,7 +28,7 @@ def blocksInfoToTable(pre_table):
                     pre_table[index]['visited'] = True
                     if(next_block['isFinal']):
                         break
-                blocks.append(Peca(cont, block['x'], block['y'], True, block['kind'], c_x-block['x']+1))
+                blocks.append(Block(cont, block['x'], block['y'], True, block['kind'], c_x-block['x']+1))
             else:
                 c_y = y
                 while(True):
@@ -38,7 +38,7 @@ def blocksInfoToTable(pre_table):
                     pre_table[index]['visited'] = True
                     if(next_block['has_bottom']):
                         break
-                blocks.append(Peca(cont, block['x'], block['y'], False, block['kind'], c_y-block['y']+1))
+                blocks.append(Block(cont, block['x'], block['y'], False, block['kind'], c_y-block['y']+1))
             block['visited'] = True
             cont+=1
     return Table(blocks)

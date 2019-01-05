@@ -134,7 +134,7 @@ def fullfillTable(blocks):
 	for y in range(0, 6):
 		for x in range(0, 6):
 			if(not tab.get_quad(x, y)):
-				tab.pieces.append(Peca(len(blocks)+1, x, y, 1, 0, 1))
+				tab.blocks.append(Block(len(blocks)+1, x, y, 1, 0, 1))
 	return tab
 
 def resetTable():
@@ -157,7 +157,7 @@ def updateTableForSolution(block):
 
 def displayTableFromIndex():
     resetTable()
-    for block in global_solution_tree[global_actual_table_index.get()].pieces:
+    for block in global_solution_tree[global_actual_table_index.get()].blocks:
         if(block.kind):
             updateTableForSolution(block)
             navigatorLabel.configure(bg="gray", text=str(global_actual_table_index.get())+" / "+ str(len(global_solution_tree)-1))
@@ -241,7 +241,7 @@ def addBlock():
     block_size_value = int(entry_size.get())
     block_isHorizontal_value = h.get()
     block_kind_value = v.get()
-    global_blocks.append(Peca(len(global_blocks), block_x_value, block_y_value, block_isHorizontal_value, block_kind_value, block_size_value))
+    global_blocks.append(Block(len(global_blocks), block_x_value, block_y_value, block_isHorizontal_value, block_kind_value, block_size_value))
     print(len(global_blocks))
     updateBlockList()
 
@@ -254,7 +254,7 @@ def solve():
     full_blocks = []
     full_blocks+=global_blocks
     tab = fullfillTable(full_blocks)
-    full_blocks = tab.pieces
+    full_blocks = tab.blocks
     tab.printTabHuman()
     solution = getSolution(tab)
     for tree_tab in solution:
@@ -273,7 +273,7 @@ def showTable(image):
     removeAllBlocks()
     pre_table = openImage(image)
     table = blocksInfoToTable(pre_table)
-    for block in table.pieces:
+    for block in table.blocks:
         if(block.kind==0):
             continue
         addBlockFromImage(block)

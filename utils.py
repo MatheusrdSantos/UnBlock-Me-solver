@@ -46,10 +46,10 @@ def openImage(path):
 	im.save('tables/modified.jpeg')
 	return pre_table
 def tabs_are_equal(tab1, tab2):
-	for x in range(0, len(tab1.pieces)):
-		if(tab1.pieces[x].kind == 0 and tab2.pieces[x].kind == 0):
+	for x in range(0, len(tab1.blocks)):
+		if(tab1.blocks[x].kind == 0 and tab2.blocks[x].kind == 0):
 			continue
-		if tab1.pieces[x].x != tab2.pieces[x].x or tab1.pieces[x].y != tab2.pieces[x].y:
+		if tab1.blocks[x].x != tab2.blocks[x].x or tab1.blocks[x].y != tab2.blocks[x].y:
 			return False
 	return True
 def hasSolvedTab(tabs):
@@ -75,15 +75,15 @@ def tabIsInArray(tabs, tab):
 			return True
 	return False
 def isParent(parent, child):
-	for piece in parent.pieces:
-		if(piece.kind == 0):
+	for block in parent.blocks:
+		if(block.kind == 0):
 			continue
-		child_peace = child.get_piece_by_id(piece.id)
-		if piece.id == child.parent_move.piece_id:
-			if piece.x != child.parent_move.last_pos['x'] or piece.y != child.parent_move.last_pos['y']:
+		child_peace = child.get_block_by_id(block.id)
+		if block.id == child.parent_move.block_id:
+			if block.x != child.parent_move.last_pos['x'] or block.y != child.parent_move.last_pos['y']:
 				return False
 		else:
-			if piece.x != child_peace.x or piece.y != child_peace.y:
+			if block.x != child_peace.x or block.y != child_peace.y:
 				return False
 	return True
 def getParentTab(tabs, child):
