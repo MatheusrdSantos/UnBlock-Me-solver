@@ -7,31 +7,20 @@ import sys
 import os
 elementsBlocks = []
 root = Tk()
-leftFrame = Frame(root, bg="green")
+leftFrame = Frame(root, bg='#ABABAB')
 leftFrame.pack(side=LEFT, fill=BOTH, expand=True)
 rightFrame = Frame(root)
 rightFrame.pack(side=RIGHT, expand=True, fill=BOTH)
 
-#button1 = Button(leftFrame, text="Button 1", fg="red")
-#button1.pack()
 
-#button2 = Button(leftFrame, text="Button 2", fg="green")
-#button2.pack()
-
-#button3 = Button(rightFrame, text="Button 3", fg="blue")
-#button3.pack()
-
-tableFrame = Frame(leftFrame, bg="yellow")
+tableFrame = Frame(leftFrame)
 
 # build your table here
-#tableLabel = Label(tableFrame, text="table", bg="red")
-#tableLabel.pack(fill=X)
 table_positions = []
 actual_table_index = IntVar()
 solution_tree = []
 for y in range(0, 6):
     for x in range(0, 6):
-        #table_positions.append(Label(tableFrame, text='('+str(x)+', '+str(y)+')', bg="blue"))
         table_positions.append(Label(tableFrame, text='('+str(x)+', '+str(y)+')', bg="gray", borderwidth=1, relief="solid"))
         table_positions[-1].grid(row=y, column=x, sticky=(N, S, E, W))
     tableFrame.columnconfigure(y, weight=1)
@@ -42,8 +31,7 @@ tableFrame.pack(expand=True, fill=X)
 tableNavigatorFrame = Frame(leftFrame)
 
 # build table navigator here
-#navigatorLabel = Label(tableNavigatorFrame, text="nevigator", bg="gray")
-#navigatorLabel.pack(fill=X)
+
 button_previous = Button(tableNavigatorFrame, text="Previous", fg="red")
 button_previous.grid()
 navigatorLabel = Label(tableNavigatorFrame, text="0/0", bg="gray")
@@ -62,8 +50,7 @@ tableNavigatorFrame.pack(expand=True, fill=X)
 tableSolverFrame = Frame(leftFrame)
 
 # build solve button here
-#solverLabel = Label(tableSolverFrame, text="solve me!", bg="pink")
-#solverLabel.pack(fill=X)
+
 button_solve = Button(tableSolverFrame, text="SOLVE ME", fg="green")
 button_solve.pack(fill=X)
 
@@ -79,8 +66,6 @@ imagesFrame.pack()
 blocksControllerFrame = Frame(rightFrame)
 
 # add and remove blocks here
-#blocksControllerLabel = Label(blocksControllerFrame, text="controll blocks!", bg="orange")
-#blocksControllerLabel.pack(fill=X)
 
 label_x = Label(blocksControllerFrame, text="x: ")
 label_x.grid(row=1, column=0)
@@ -96,11 +81,6 @@ label_size.grid(row=2, column=0)
 entry_size = Entry(blocksControllerFrame)
 entry_size.grid(row=2, column=1)
 
-#label_isHorizontal = Label(blocksControllerFrame, text="Is Horizontal? ")
-#label_isHorizontal.grid(row=2, column=2)
-#entry_isHorizontal = Entry(blocksControllerFrame)
-#entry_isHorizontal.grid(row=2, column=3)
-
 h = IntVar()
 h.set(0)
 Label(blocksControllerFrame, text="Is Horizontal?").grid(row=2, column=2)
@@ -111,7 +91,7 @@ Radiobutton(blocksControllerFrame, text="no", variable=h, value=0).grid(row = 2,
 kinds = [("Block", 1),("Prisioner", 2)]
 
 v = IntVar()
-v.set(0) # initialize
+v.set(0)
 cont = 0
 for text, mode in kinds:
     b = Radiobutton(blocksControllerFrame, text=text,
@@ -120,7 +100,6 @@ for text, mode in kinds:
     cont+=1
 blocks = []
 button_addBlock = Button(blocksControllerFrame, text="add Block")
-#button_addBlock.configure(command=addBlock)
 button_addBlock.grid(columnspan=4)
 
 blocksControllerFrame.pack(expand=True, fill=X)
@@ -129,24 +108,6 @@ blocksControllerFrame.pack(expand=True, fill=X)
 blockListFrame = Frame(rightFrame)
 
 # list all blocks here
-#blockListLabel = Label(blockListFrame, text="list blocks!", bg="purple")
-#blockListLabel.pack(fill=X)
-'''
-blockName = Label(blockListFrame, text="Block_1")
-blockName.grid(row=0, sticky=(N, S, E, W))
-block_x = Label(blockListFrame, text="0")
-block_x.grid(row=0, column = 1, sticky=(N, S, E, W))
-block_y = Label(blockListFrame, text="1")
-block_y.grid(row=0, column = 2, sticky=(N, S, E, W))
-block_size = Label(blockListFrame, text="3")
-block_size.grid(row=0, column = 3, sticky=(N, S, E, W))
-block_kind = Label(blockListFrame, text="block")
-block_kind.grid(row=0, column = 4,sticky=(N, S, E, W))
-'''
-
-#button_remove = Button(blockListFrame, text="del", bg="red")
-#button_remove.grid(row=0, column = 5, sticky=(N, S, E, W))
-
 
 blockListFrame.columnconfigure(0, weight=1)
 blockListFrame.columnconfigure(1, weight=1)
@@ -172,7 +133,7 @@ def fullfillTable(blocks):
 def resetTable():
     for y in range(0, 6):
         for x in range(0, 6):
-            table_positions[(6*y)+x].configure(text='('+str(x)+', '+str(y)+')', bg="gray", borderwidth=1, relief="solid")
+            table_positions[(6*y)+x].configure(text='('+str(x)+', '+str(y)+')', bg="#674519", borderwidth=1, relief="solid")
 def updateTableForSolution(block):
     block_index = (6*block.y)+block.x
     if block.kind==1:
@@ -192,7 +153,7 @@ def displayTableFromIndex():
     for block in solution_tree[actual_table_index.get()].pieces:
         if(block.kind):
             updateTableForSolution(block)
-            navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
+            navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)-1))
 def displayNextTable():
     actual_table_index.set(actual_table_index.get()+1)
     displayTableFromIndex()
@@ -201,7 +162,7 @@ def displayNextTableDelay():
     actual_table_index.set(actual_table_index.get()+1)
     displayTableFromIndex()
     if(actual_table_index.get()<len(solution_tree)-1):
-        root.after(2000, displayNextTableDelay)
+        root.after(1500, displayNextTableDelay)
 
 def displayPreviousTable():
     actual_table_index.set(actual_table_index.get()-1)
@@ -232,13 +193,12 @@ def removeAllBlocks():
     for block in blocks:
         current_block = block
         blocks.remove(block)
-    #for element in elements:
-        #element.destroy()
+
 def updateTable():
     last_block = blocks[-1]
     block_index = (6*last_block.y)+last_block.x
     if last_block.kind==1:
-        color = "orange"
+        color = "#d67819"
     else:
         color = "red"
     table_positions[block_index].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
@@ -294,7 +254,6 @@ def solve():
         solution_tree.append(tree_tab)
     navigatorLabel.configure(bg="gray", text=str(actual_table_index.get())+" / "+ str(len(solution_tree)))
     displayNextTableDelay()
-    #displayTableFromIndex()
 
 def showTable(image):
     resetTable()

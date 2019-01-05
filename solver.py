@@ -5,10 +5,9 @@ def getSolution(t):
 	cont = 0
 	while not solved:
 		cont+=1
-		print(cont)
+		print("Moves: "+str(cont))
 		actual_depth = tree[-1]
 		childs = []
-		print(len(actual_depth))
 		for tab in actual_depth:
 			new_childs = tab.getAllChilds()
 			solved_tab_result = hasSolvedTab(new_childs)
@@ -19,15 +18,11 @@ def getSolution(t):
 				solved_tab_index = solved_tab_result[1]
 				break
 			childs+=new_childs
-		#tree.clear()
 		if(not solved):
-			print("antes: "+str(len(childs)))
 			childs = removeRepeatedTabs(childs)
-			print("depois: "+str(len(childs)))
 			tree.append(childs)
 
-	print("RESOLVIDO")
-	print(len(tree))
+	print("---- SOLVED! ----")
 	solution_tree = []
 	solution_tree.append(solved_tab)
 	actual_tab = solved_tab

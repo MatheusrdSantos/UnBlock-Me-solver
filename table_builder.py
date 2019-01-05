@@ -23,7 +23,6 @@ def blocksInfoToTable(pre_table):
                 c_x = x
                 while(True):
                     c_x+=1
-                    #print(c_x, y)
                     index = findBlock(pre_table, c_x, y)
                     next_block = pre_table[index]
                     pre_table[index]['visited'] = True
@@ -34,7 +33,6 @@ def blocksInfoToTable(pre_table):
                 c_y = y
                 while(True):
                     c_y+=1
-                    #print(x, c_y)
                     index = findBlock(pre_table, x, c_y)
                     next_block = pre_table[index]
                     pre_table[index]['visited'] = True
@@ -44,10 +42,3 @@ def blocksInfoToTable(pre_table):
             block['visited'] = True
             cont+=1
     return Table(blocks)
-'''
-pre_table = openImage("tables/tab1.jpeg")
-tab = blocksInfoToTable(pre_table)
-tab.printTabHuman()
-for tab in pre_table:
-	print(tab)
-'''

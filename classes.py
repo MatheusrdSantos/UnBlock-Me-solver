@@ -19,7 +19,6 @@ class Peca:
 class Table:
 	def __init__(self, pieces, parent_move = Move(last_pos={'x': -1, 'y':-1}, piece_id=-1, new_pos={'x':-1, 'y':-1}), moves = []):
 		self.pieces = pieces
-		#[id_piece, type_move(up or donw)]
 		self.parent_move = parent_move
         # for each new move create a new child table
 		self.moves = moves
@@ -182,14 +181,12 @@ class Table:
 			if(move.piece_id == piece.id):
 				count+=1
 		if (count==2):
-			#print("primeiro")
 			return False
 		else:
 			if (self.canMoveFowards(piece)):
 				return self.moveFowards(piece) 
 			elif (self.canMoveBackwards(piece)):
 				return self.moveBackwards(piece)
-		#print("segundo")
 		return False
 
     # the child tab is created based on parent move and the other moves that create the other childs
@@ -204,16 +201,10 @@ class Table:
     #this function returns an array with all childs (tables)
 	def getAllChilds(self):
 		childs = []
-		#print('-----parent----')
-		#self.printTabHuman()
-		#print(self.moves)
-		#print('-----parent----')
 		while True:
 			child = self.getChild()
 			if not child:
 				break
-			#input()
-			#child.printTabHuman()
 			childs.append(child)
 		return childs
 	def find_prisioner(self):
