@@ -198,7 +198,7 @@ def updateTable():
     last_block = blocks[-1]
     block_index = (6*last_block.y)+last_block.x
     if last_block.kind==1:
-        color = "#d67819"
+        color = "orange"
     else:
         color = "red"
     table_positions[block_index].configure(text=last_block.id, bg=color, borderwidth=2, relief="solid")
