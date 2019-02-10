@@ -1,7 +1,7 @@
 # UnBlockMe solver
 This project describes an usage of breadth first search to solve the mobile game UnblockMe [download the game here](https://play.google.com/store/apps/details?id=com.kiragames.unblockmefree&hl=pt).
 
-## Dependences
+## Dependencies
 - Any version of Python3
 - Pillow for Python3
 - TKinter
